@@ -1,0 +1,28 @@
+---
+// Tri-state-ish toggle: dark <-> light. Persists in localStorage.
+---
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle color theme">
+  <span data-on="dark">[ light ]</span>
+  <span data-on="light">[ dark ]</span>
+</button>
+
+<script is:inline>
+  (function () {
+    const root = document.documentElement;
+    const btn = document.getElementById('theme-toggle');
+    function apply(theme) {
+      root.dataset.theme = theme;
+      btn?.querySelectorAll('span').forEach((s) => {
+        s.style.display = s.dataset.on === theme ? 'inline' : 'none';
+      });
+    }
+    const saved = localStorage.getItem('theme');
+    const sys = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    apply(saved || sys);
+    btn?.addEventListener('click', () => {
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', next);
+      apply(next);
+    });
+  })();
+</script>

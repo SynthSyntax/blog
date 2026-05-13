@@ -1,0 +1,95 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[];
+  withFilter?: boolean;
+}
+const { posts, withFilter = false } = Astro.props;
+
+// Group by year, descending.
+const byYear = new Map<number, CollectionEntry<'posts'>[]>();
+for (const p of posts) {
+  const y = p.data.date.getFullYear();
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(p);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+
+// Build tag list (ordered by frequency desc, then alpha).
+const tagCounts = new Map<string, number>();
+for (const p of posts) for (const t of p.data.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+const allTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toLowerCase();
+---
+{posts.length === 0 && (
+  <p style="color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
+    no posts yet. soon.
+  </p>
+)}
+
+{withFilter && allTags.length > 0 && (
+  <div class="filter-bar" role="group" aria-label="Filter posts by tag">
+    <button class="filter-chip active" data-tag="">all</button>
+    {allTags.map(([tag, n]) => (
+      <button class="filter-chip" data-tag={tag}>#{tag} <span class="count">({n})</span></button>
+    ))}
+  </div>
+)}
+
+<div class="post-groups">
+  {years.map((year) => (
+    <details class="year-group" open>
+      <summary>{year}</summary>
+      <ul class="post-list">
+        {byYear.get(year)!.map((p) => (
+          <li data-tags={p.data.tags.join(' ')}>
+            <span class="date">{fmtDate(p.data.date)}</span>
+            <span>
+              <a class="title" href={`/posts/${p.id}`}>{p.data.title}</a>
+              {p.data.tags.length > 0 && (
+                <span class="tags">
+                  &nbsp;&nbsp;{p.data.tags.map((t) => `#${t}`).join(' ')}
+                </span>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </details>
+  ))}
+</div>
+
+{withFilter && (
+  <script is:inline>
+    (function () {
+      const chips = document.querySelectorAll('.filter-chip');
+      const items = document.querySelectorAll('.post-list li[data-tags]');
+      const groups = document.querySelectorAll('details.year-group');
+
+      function apply(tag) {
+        items.forEach((li) => {
+          const tags = (li.dataset.tags || '').split(' ').filter(Boolean);
+          li.hidden = !!tag && !tags.includes(tag);
+        });
+        groups.forEach((g) => {
+          const hasVisible = [...g.querySelectorAll('.post-list li')].some((li) => !li.hidden);
+          g.hidden = !hasVisible;
+          if (tag && hasVisible) g.open = true;
+        });
+        chips.forEach((c) => c.classList.toggle('active', (c.dataset.tag || '') === (tag || '')));
+        const url = new URL(location.href);
+        if (tag) url.searchParams.set('tag', tag);
+        else url.searchParams.delete('tag');
+        history.replaceState(null, '', url.pathname + (url.search ? url.search : ''));
+      }
+
+      chips.forEach((c) => c.addEventListener('click', () => apply(c.dataset.tag || '')));
+
+      const initial = new URLSearchParams(location.search).get('tag') || '';
+      if (initial) apply(initial);
+    })();
+  </script>
+)}

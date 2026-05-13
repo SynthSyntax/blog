@@ -1,0 +1,8 @@
+---
+import { site } from '../site.config';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <span>&copy; {year} &nbsp; {site.author}</span>
+  {site.footerNote && <span>{site.footerNote}</span>}
+</footer>

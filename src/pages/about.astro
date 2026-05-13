@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config';
+---
+<BaseLayout title="about">
+  <h1>about</h1>
+
+  <p>
+    Hi — I'm {site.author}. I'm a PhD researcher working at the intersection of
+    computer science and robotics. This is where I keep the work that won't fit
+    in a paper: half-formed ideas, side projects, things I learned the hard way,
+    and the occasional rant.
+  </p>
+
+  <p>
+    The plan is to write the way I'd talk to a friend over coffee — clear when
+    I can be, honest when I can't, and unapologetically specific. If anything
+    here is useful to you, that's a happy accident.
+  </p>
+
+  <h2>elsewhere</h2>
+  <ul>
+    <li>email — <a href={`mailto:${site.email}`}>{site.email}</a></li>
+    {site.github && <li>github — <a href={site.github}>{site.github}</a></li>}
+    {site.scholar && <li>scholar — <a href={site.scholar}>{site.scholar}</a></li>}
+    {site.twitter && <li>twitter — <a href={site.twitter}>{site.twitter}</a></li>}
+  </ul>
+
+  <hr />
+
+  <p style="color: var(--text-dim); font-size: 0.9rem;">
+    This site is hand-built with Astro. Posts are plain Markdown. No tracking,
+    no cookies, no algorithm. If you want to know when something new lands,
+    grab the <a href="/rss.xml">RSS feed</a>.
+  </p>
+</BaseLayout>
