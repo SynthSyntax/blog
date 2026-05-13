@@ -9,10 +9,6 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
 );
 ---
 <BaseLayout>
-  <p class="home-intro">
-    {site.tagline}
-    <br />
-    <em>scroll down for the writing.</em>
-  </p>
+  <p class="home-intro">{site.tagline}</p>
   <PostList posts={posts} withFilter />
 </BaseLayout>

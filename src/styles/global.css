@@ -282,28 +282,31 @@ pre code {
 .filter-chip.active .count { opacity: 0.85; }
 
 /* collapsible year groups */
-details.year-group { margin: 1.6rem 0 0; }
+details.year-group { margin: 1.8rem 0 0; }
 details.year-group > summary {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 0.78rem;
-  color: var(--text-dim);
-  letter-spacing: 0.08em;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.005em;
   list-style: none;
   cursor: pointer;
-  padding: 0.35rem 0;
+  padding: 0.5rem 0 0.4rem;
   user-select: none;
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.7rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0.3rem;
 }
 details.year-group > summary::-webkit-details-marker { display: none; }
 details.year-group > summary::before {
   content: '';
   width: 0;
   height: 0;
-  border-left: 4px solid var(--text-dim);
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
+  border-left: 6px solid var(--text);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
   transition: transform 150ms ease;
 }
 details.year-group[open] > summary::before { transform: rotate(90deg); }

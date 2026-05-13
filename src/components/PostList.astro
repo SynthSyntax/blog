@@ -68,28 +68,48 @@ const fmtDate = (d: Date) =>
       const chips = document.querySelectorAll('.filter-chip');
       const items = document.querySelectorAll('.post-list li[data-tags]');
       const groups = document.querySelectorAll('details.year-group');
+      const selected = new Set();
 
-      function apply(tag) {
+      function render() {
+        const showAll = selected.size === 0;
         items.forEach((li) => {
           const tags = (li.dataset.tags || '').split(' ').filter(Boolean);
-          li.hidden = !!tag && !tags.includes(tag);
+          li.hidden = !showAll && !tags.some((t) => selected.has(t));
         });
         groups.forEach((g) => {
           const hasVisible = [...g.querySelectorAll('.post-list li')].some((li) => !li.hidden);
           g.hidden = !hasVisible;
-          if (tag && hasVisible) g.open = true;
+          if (!showAll && hasVisible) g.open = true;
         });
-        chips.forEach((c) => c.classList.toggle('active', (c.dataset.tag || '') === (tag || '')));
+        chips.forEach((c) => {
+          const tag = c.dataset.tag || '';
+          c.classList.toggle('active', tag === '' ? showAll : selected.has(tag));
+        });
         const url = new URL(location.href);
-        if (tag) url.searchParams.set('tag', tag);
-        else url.searchParams.delete('tag');
-        history.replaceState(null, '', url.pathname + (url.search ? url.search : ''));
+        if (showAll) url.searchParams.delete('tags');
+        else url.searchParams.set('tags', [...selected].join(','));
+        url.searchParams.delete('tag'); // clean up legacy param
+        history.replaceState(null, '', url.pathname + (url.search || ''));
       }
 
-      chips.forEach((c) => c.addEventListener('click', () => apply(c.dataset.tag || '')));
+      chips.forEach((c) => {
+        c.addEventListener('click', () => {
+          const tag = c.dataset.tag || '';
+          if (tag === '') {
+            selected.clear(); // "all" is mutually exclusive
+          } else {
+            if (selected.has(tag)) selected.delete(tag);
+            else selected.add(tag);
+          }
+          render();
+        });
+      });
 
-      const initial = new URLSearchParams(location.search).get('tag') || '';
-      if (initial) apply(initial);
+      // restore from URL (accept ?tags=a,b or legacy ?tag=a)
+      const params = new URLSearchParams(location.search);
+      const raw = params.get('tags') || params.get('tag') || '';
+      raw.split(',').map((t) => t.trim()).filter(Boolean).forEach((t) => selected.add(t));
+      render();
     })();
   </script>
 )}
