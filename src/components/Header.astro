@@ -1,19 +1,21 @@
 ---
 import { site } from '../site.config';
+import { u } from '../lib/url';
 import ThemeToggle from './ThemeToggle.astro';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const home = u('/').replace(/\/$/, '') || '/';
 const isActive = (href: string) => {
   const h = href.replace(/\/$/, '') || '/';
-  if (h === '/') return path === '/';
+  if (h === home) return path === home;
   return path === h || path.startsWith(h + '/');
 };
 ---
 <header class="site-header">
-  <a class="brand" href="/">[ {site.title} ]</a>
+  <a class="brand" href={u('/')}>[ {site.title} ]</a>
   <nav>
-    <a href="/" aria-current={isActive('/') ? 'page' : undefined}>log</a>
-    <a href="/about" aria-current={isActive('/about') ? 'page' : undefined}>about</a>
+    <a href={u('/')} aria-current={isActive(home) ? 'page' : undefined}>log</a>
+    <a href={u('/about')} aria-current={isActive(u('/about')) ? 'page' : undefined}>about</a>
   </nav>
   <span class="spacer"></span>
   <ThemeToggle />

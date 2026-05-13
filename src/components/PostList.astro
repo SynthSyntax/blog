@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { u } from '../lib/url';
 
 interface Props {
   posts: CollectionEntry<'posts'>[];
@@ -48,7 +49,7 @@ const fmtDate = (d: Date) =>
           <li data-tags={p.data.tags.join(' ')}>
             <span class="date">{fmtDate(p.data.date)}</span>
             <span>
-              <a class="title" href={`/posts/${p.id}`}>{p.data.title}</a>
+              <a class="title" href={u(`/posts/${p.id}`)}>{p.data.title}</a>
               {p.data.tags.length > 0 && (
                 <span class="tags">
                   &nbsp;&nbsp;{p.data.tags.map((t) => `#${t}`).join(' ')}

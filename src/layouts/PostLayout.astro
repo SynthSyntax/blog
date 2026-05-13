@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import { u } from '../lib/url';
 
 interface Props {
   title: string;
@@ -21,7 +22,7 @@ const fmt = (d: Date) =>
       {tags.length > 0 && (
         <span>
           {tags.map((t) => (
-            <a class="tag-chip" href={`/?tags=${t}`}>#{t}</a>
+            <a class="tag-chip" href={u(`/?tags=${t}`)}>#{t}</a>
           ))}
         </span>
       )}

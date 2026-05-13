@@ -2,12 +2,11 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
-// EDIT ME when you have a custom domain or know your GH Pages URL.
-// For username.github.io repo: site = 'https://USERNAME.github.io', base = '/'
-// For project repo (e.g. /blog): site = 'https://USERNAME.github.io', base = '/blog'
+// Deploying as a project site under synthsyntax.github.io/blog/.
+// If/when you move to a custom domain or to a user site, update site + base.
 export default defineConfig({
-  site: 'https://example.github.io',
-  base: '/',
+  site: 'https://synthsyntax.github.io',
+  base: '/blog',
   integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: {
