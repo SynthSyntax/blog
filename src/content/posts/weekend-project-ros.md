@@ -1,5 +1,5 @@
 ---
-title: "a weekend with a $30 robot arm"
+title: "A weekend with a $30 robot arm"
 date: 2026-03-10
 description: "what a cheap servo-driven arm teaches you that simulation never will."
 tags: [projects, robotics]

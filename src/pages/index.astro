@@ -2,13 +2,11 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostList from '../components/PostList.astro';
-import { site } from '../site.config';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
 ---
 <BaseLayout>
-  <p class="home-intro">{site.tagline}</p>
   <PostList posts={posts} withFilter />
 </BaseLayout>

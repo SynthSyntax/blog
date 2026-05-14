@@ -33,9 +33,10 @@ const fmtDate = (d: Date) =>
 
 {withFilter && allTags.length > 0 && (
   <div class="filter-bar" role="group" aria-label="Filter posts by tag">
-    <button class="filter-chip active" data-tag="">all</button>
+    <span class="filter-label">Filter</span>
+    <button class="filter-chip active" data-tag="">All</button>
     {allTags.map(([tag, n]) => (
-      <button class="filter-chip" data-tag={tag}>#{tag} <span class="count">({n})</span></button>
+      <button class="filter-chip" data-tag={tag}>#{tag}<span class="count">({n})</span></button>
     ))}
   </div>
 )}
@@ -48,14 +49,10 @@ const fmtDate = (d: Date) =>
         {byYear.get(year)!.map((p) => (
           <li data-tags={p.data.tags.join(' ')}>
             <span class="date">{fmtDate(p.data.date)}</span>
-            <span>
-              <a class="title" href={u(`/posts/${p.id}`)}>{p.data.title}</a>
-              {p.data.tags.length > 0 && (
-                <span class="tags">
-                  &nbsp;&nbsp;{p.data.tags.map((t) => `#${t}`).join(' ')}
-                </span>
-              )}
-            </span>
+            <a class="title" href={u(`/posts/${p.id}`)}>{p.data.title}</a>
+            {p.data.tags.length > 0 && (
+              <span class="row-tags">{p.data.tags.map((t) => `#${t}`).join(' ')}</span>
+            )}
           </li>
         ))}
       </ul>

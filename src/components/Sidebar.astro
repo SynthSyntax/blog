@@ -11,12 +11,14 @@ const isActive = (href: string) => {
   return path === h || path.startsWith(h + '/');
 };
 ---
-<header class="site-header">
-  <a class="brand" href={u('/')}>[ {site.title} ]</a>
-  <nav>
-    <a href={u('/')} aria-current={isActive(home) ? 'page' : undefined}>log</a>
-    <a href={u('/about')} aria-current={isActive(u('/about')) ? 'page' : undefined}>about</a>
+<aside class="sidebar">
+  <div class="sidebar-head">
+    <a class="brand" href={u('/')}>[ {site.title} ]</a>
+    <ThemeToggle />
+  </div>
+  <p class="tagline">{site.tagline}</p>
+  <nav class="sidebar-nav">
+    <a href={u('/')} aria-current={isActive(home) ? 'page' : undefined}>Log</a>
+    <a href={u('/about')} aria-current={isActive(u('/about')) ? 'page' : undefined}>About</a>
   </nav>
-  <span class="spacer"></span>
-  <ThemeToggle />
-</header>
+</aside>

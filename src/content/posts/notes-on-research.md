@@ -1,5 +1,5 @@
 ---
-title: "what nobody tells you about the first year of a PhD"
+title: "What nobody tells you about the first year of a PhD"
 date: 2026-04-22
 description: "the part where the reading list gets longer than the days."
 tags: [research, thoughts]

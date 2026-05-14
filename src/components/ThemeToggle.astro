@@ -1,28 +1,31 @@
 ---
-// Tri-state-ish toggle: dark <-> light. Persists in localStorage.
+// Icon toggle — a half-filled circle, the classic minimal dark-mode glyph.
+// Swaps theme and persists the choice in localStorage.
 ---
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle color theme">
-  <span data-on="dark">[ light ]</span>
-  <span data-on="light">[ dark ]</span>
+<button
+  class="theme-toggle"
+  id="theme-toggle"
+  type="button"
+  aria-label="Toggle light or dark theme"
+  title="Toggle light / dark"
+>
+  <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true">
+    <circle cx="10" cy="10" r="8.4" fill="none" stroke="currentColor" stroke-width="1.4" />
+    <path d="M10 1.6 A8.4 8.4 0 0 1 10 18.4 Z" fill="currentColor" />
+  </svg>
 </button>
 
 <script is:inline>
   (function () {
     const root = document.documentElement;
     const btn = document.getElementById('theme-toggle');
-    function apply(theme) {
-      root.dataset.theme = theme;
-      btn?.querySelectorAll('span').forEach((s) => {
-        s.style.display = s.dataset.on === theme ? 'inline' : 'none';
-      });
-    }
     const saved = localStorage.getItem('theme');
     const sys = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    apply(saved || sys);
+    root.dataset.theme = saved || sys;
     btn?.addEventListener('click', () => {
       const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
       localStorage.setItem('theme', next);
-      apply(next);
+      root.dataset.theme = next;
     });
   })();
 </script>

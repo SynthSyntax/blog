@@ -1,7 +1,7 @@
 // Edit this file to personalize the blog. One place, no scavenger hunt.
 export const site = {
-  title: 'bharghav',
-  tagline: 'notes from a robotics PhD — research, projects, scattered thoughts.',
+  title: 'Bharghav',
+  tagline: 'Notes from a robotics PhD — research, projects, scattered thoughts.',
   author: 'Bharghav',
   email: 'bharghav2002@gmail.com',
   // Social links — leave blank to hide.

@@ -1,5 +1,5 @@
 ---
-title: "hello, world (again)"
+title: "Hello, world (again)"
 date: 2026-05-13
 description: "why I'm starting yet another blog, and what's actually going on here."
 tags: [meta, thoughts]
