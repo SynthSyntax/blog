@@ -1,0 +1,52 @@
+---
+// Notion-style section navigator: minimal dashes that expand into
+// clickable section names on hover. The dash of the section currently
+// in view is highlighted (scroll-spy). Desktop-only — hidden under 1080px.
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+interface Props {
+  headings: Heading[];
+}
+const { headings } = Astro.props;
+---
+<nav class="toc" aria-label="On this page">
+  <ul class="toc-list">
+    {headings.map((h) => (
+      <li class={`toc-item toc-d${h.depth}`}>
+        <a class="toc-link" href={`#${h.slug}`} data-slug={h.slug}>
+          <span class="toc-dash" aria-hidden="true"></span>
+          <span class="toc-label">{h.text}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<script>
+  const toc = document.querySelector('.toc');
+  if (toc) {
+    const links = [...toc.querySelectorAll<HTMLAnchorElement>('.toc-link')];
+    const byId = new Map(links.map((l) => [l.dataset.slug, l]));
+    const targets = links
+      .map((l) => (l.dataset.slug ? document.getElementById(l.dataset.slug) : null))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (targets.length) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              links.forEach((l) => l.classList.remove('is-active'));
+              byId.get(entry.target.id)?.classList.add('is-active');
+            }
+          }
+        },
+        { rootMargin: '0px 0px -72% 0px' }
+      );
+      targets.forEach((t) => observer.observe(t));
+    }
+  }
+</script>

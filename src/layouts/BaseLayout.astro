@@ -13,6 +13,7 @@ interface Props {
 const { title, description = site.tagline, ogImage } = Astro.props;
 const fullTitle = title ? `${title} — ${site.title}` : `${site.title}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const hasToc = Astro.slots.has('toc');
 ---
 <!doctype html>
 <html lang="en" class="theme-pending">
@@ -43,7 +44,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   </script>
 </head>
 <body>
-  <div class="layout">
+  <div class:list={['layout', { 'has-toc': hasToc }]}>
     <Sidebar />
     <div class="content">
       <main>
@@ -51,6 +52,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       </main>
       <Footer />
     </div>
+    <slot name="toc" />
   </div>
 </body>
 </html>

@@ -48,7 +48,10 @@
 
 * { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
 
 body {
   margin: 0;
@@ -67,21 +70,24 @@ body {
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* layout shell — sidebar + content */
+/* layout shell — sidebar | content | toc */
 .layout {
-  max-width: 940px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 4.5rem 2rem 5rem;
   display: grid;
-  grid-template-columns: 190px minmax(0, 600px);
-  gap: 0 4.5rem;
+  grid-template-columns: 175px minmax(0, 700px) minmax(120px, 160px);
+  gap: 0 3rem;
   justify-content: center;
   align-items: start;
 }
+.sidebar { grid-column: 1; }
+.content { grid-column: 2; min-width: 0; }
+.toc { grid-column: 3; }
+/* pages with no TOC (the log, about): let content use the right column too */
+.layout:not(.has-toc) .content { grid-column: 2 / 4; }
 
 main { display: block; }
-
-.content { min-width: 0; }
 
 /* sidebar */
 .sidebar {
@@ -174,16 +180,43 @@ a {
 a:hover { text-decoration-color: var(--accent); }
 
 h1, h2, h3, h4 {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-weight: 700;
-  letter-spacing: -0.015em;
   line-height: 1.25;
   margin: 2.2em 0 0.6em;
   color: var(--text);
 }
-h1 { font-size: 1.55rem; margin-top: 0; }
-h2 { font-size: 1.2rem; }
-h3 { font-size: 1.0rem; color: var(--text-dim); }
+/* section headings stay monospace — short labels, deliberate look */
+h2, h3, h4 {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  letter-spacing: -0.015em;
+}
+/* article + page title — serif, handles long headlines gracefully */
+h1 {
+  font-family: Charter, 'Iowan Old Style', 'Apple Garamond', Baskerville, 'Times New Roman', Times, serif;
+  font-size: 2.1rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+}
+h2 {
+  font-size: 1.32rem;
+  margin-top: 2.6em;
+  color: var(--text);
+  padding-bottom: 0.35em;
+  position: relative;
+}
+h2::after {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 2px;
+  background: var(--accent);
+  margin-top: 0.3em;
+}
+h3 {
+  font-size: 1.08rem;
+  margin-top: 2.2em;
+}
 
 p, ul, ol, blockquote, pre { margin: 0 0 1.15em; }
 
@@ -378,7 +411,7 @@ details.year-group > summary:hover::before { border-left-color: var(--accent); }
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 0.78rem;
   color: var(--text-dim);
-  margin: -0.3rem 0 2rem;
+  margin: 0.4rem 0 2.25rem;
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
@@ -400,6 +433,63 @@ details.year-group > summary:hover::before { border-left-color: var(--accent); }
 }
 .tag-chip:hover { color: var(--accent); border-color: var(--accent); }
 
+/* table of contents — minimal dashes, expand on hover */
+.toc {
+  position: sticky;
+  top: 4.5rem;
+  align-self: start;
+  padding-top: 0.35rem;
+}
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+.toc-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.3rem 0;
+  text-decoration: none;
+}
+.toc-dash {
+  display: block;
+  height: 2px;
+  width: 1.65rem;
+  background: var(--rule);
+  border-radius: 2px;
+  flex-shrink: 0;
+  transition: width 180ms ease, background 150ms ease;
+}
+.toc-d3 .toc-dash {
+  width: 1rem;
+  margin-left: 0.65rem;
+}
+.toc-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity 180ms ease, transform 180ms ease, color 120ms ease;
+}
+.toc:hover .toc-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+.toc:hover .toc-dash { width: 0.7rem; }
+.toc-link:hover .toc-dash,
+.toc-link.is-active .toc-dash { background: var(--accent); }
+.toc-link:hover .toc-label { color: var(--accent); }
+.toc-link.is-active .toc-label { color: var(--text); }
+
+/* let post headings clear the top when jumped to via the TOC */
+.post-body :where(h2, h3, h4) { scroll-margin-top: 1.5rem; }
+
 /* small touch: dropcap on first paragraph of posts */
 .post-body > p:first-of-type::first-letter {
   font-family: Charter, 'Iowan Old Style', Baskerville, serif;
@@ -415,6 +505,18 @@ details.year-group > summary:hover::before { border-left-color: var(--accent); }
 ::selection {
   background: var(--accent);
   color: var(--bg);
+}
+
+/* responsive — drop the TOC, fall back to sidebar + content */
+@media (max-width: 1080px) {
+  .layout {
+    grid-template-columns: 175px minmax(0, 1fr);
+    max-width: 900px;
+    gap: 0 3rem;
+  }
+  .toc { display: none; }
+  .content,
+  .layout:not(.has-toc) .content { grid-column: 2; }
 }
 
 /* responsive — collapse sidebar into a top header */

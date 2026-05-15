@@ -16,7 +16,7 @@ section, no like button, no newsletter pop-up, no reading-time estimate
 pretending to know how fast you read. If a post is good you'll know. If it
 isn't you'll close the tab. Both are fine.
 
-## what to expect
+## What to expect
 
 I do research in computer science and robotics, so a lot of this will be about
 that — proofs that nearly worked, experiments that didn't, the gap between
@@ -31,7 +31,7 @@ The tags are how to find what you came for:
 - `#thoughts` — essays, rants, slow walks.
 - `#til` — small things learned, captured before I forget.
 
-## the inspiration
+## The inspiration
 
 I owe a debt to [Neil Fraser's blog](https://neil.fraser.name/). I don't share
 his aesthetic — this place is dressier — but I share his stance: a blog is a

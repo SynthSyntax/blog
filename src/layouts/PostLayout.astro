@@ -1,19 +1,28 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import { u } from '../lib/url';
 
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
 interface Props {
   title: string;
   date: Date;
   updated?: Date;
   description?: string;
   tags?: string[];
+  headings?: Heading[];
 }
-const { title, date, updated, description, tags = [] } = Astro.props;
+const { title, date, updated, description, tags = [], headings = [] } = Astro.props;
+const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 <BaseLayout title={title} description={description}>
+  {tocItems.length > 1 && <TableOfContents slot="toc" headings={tocItems} />}
   <article>
     <h1>{title}</h1>
     <div class="post-meta">
